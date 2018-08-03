@@ -1,0 +1,192 @@
+{
+	"extensionName": "SMARS Bluetooth MotorShield",
+	"description": "An Extension for SMARS Bluetooth MotorShield",
+	"version": "1.7",
+	"author": "SergioEsquivel(sergioe23@gmail.com)",
+	"homepage": "https://github.com/40371231H/mblock-extention-beetle",
+	"sort":0,
+	"javascriptURL":"js/smars.js",
+  	"firmware":"1.0",
+  	"extensionPort":0,
+	"blockSpecs": [
+        [
+            "w",
+            "BT RX: %d.BTport TX: %d.BTport , Baud %d.baud",
+            "BTinit",
+            "0",
+            "1",
+            "9600",
+		    {
+                "setup":"BTSerial.begin({2});\n",
+                "inc":"",
+                "def":"SoftwareSerial BTSerial({0},{1});\n",
+                "work":"",
+                "loop":""
+            }
+        ],
+
+        [
+            "w",
+            "BT Set Name %s",
+            "ATSetName",
+            "SMARS",
+		    {
+                "setup":"BTSerial.println(\"AT\");\ndelay(100);\n",
+                "inc":"",
+                "def":"",
+                "work":"BTSerial.println(\"AT+NAME=\"{0});\ndelay(100);\n",
+                "loop":""
+            }
+        ],
+
+        [
+            "w",
+            "BT Set Password %n",
+            "ATSetPSWD",
+            "1234",
+		    {
+                "setup":"BTSerial.println(\"AT\");\ndelay(100);\n",
+                "inc":"",
+                "def":"",
+                "work":"BTSerial.println(\"AT+PSWD=\\\"{0}\\\"\");\ndelay(100);\n",
+                "loop":""
+            }
+        ],
+
+        [
+            "w",
+            "BT Set Baud %d.baud",
+            "ATSetBaud",
+            "9600",
+		    {
+                "setup":"BTSerial.println(\"AT\");\ndelay(100);\n",
+                "inc":"",
+                "def":"",
+                "work":"BTSerial.println(\"AT+UART={0},0,0\");\ndelay(100);\n",
+                "loop":""
+            }
+        ],
+
+        [
+            "w",
+            "BT Serial Write %s",
+            "BTwrite",
+            "Hello World",
+		    {
+                "setup":"",
+                "inc":"",
+                "def":"",
+                "work":"BTSerial.write({0});\n",
+                "loop":""
+            }
+        ],
+
+        [
+            "w",
+            "BT Serial Read",
+            "BTcommandread",
+		    {
+                "setup":"",
+				"inc":"",
+				"def":"char c;\nString palabra;\n",
+                "work":"while(BTSerial.available()){\ndelay(3);\nc = BTSerial.read();\npalabra += c;\n}\n",
+                "loop":""
+            }
+        ],
+		[
+			"R",
+			"Word",
+			"BTword",
+			{
+				"setup":"",
+				"inc":"",
+				"def":"String palabra;\n",
+				"work":"palabra",
+				"loop":""
+			}
+		],
+		
+		[
+            "w",
+            "BT Serial Clean",
+            "BTclean",
+		    {
+                "setup":"",
+				"inc":"",
+				"def":"String palabra;\n",
+                "work":"palabra = \"\";\n",
+                "loop":""
+            }
+        ],
+		
+		[
+			"w",
+			"motorRun motor %d.motor direction %d.direction speed %d.speed",
+			"motorRun",
+			"1",
+			"FORWARD",
+			"200",
+			{
+				"setup":"",
+				"inc":"#include \"AFMotor.h\"\n",
+				"def":"AF_DCMotor motor{0}({0});\n",
+				"work":"motor{0}.setSpeed({2});\nmotor{0}.run({1});\n",
+				"loop":""
+			}
+		],
+
+		[
+			"w",
+			"motorStop motor %d.motor",
+			"motorStop",
+			"1",
+			{
+				"setup":"",
+				"inc":"#include \"AFMotor.h\"",
+				"def":"AF_DCMotor motor{0}({0});\n",
+				"work":"motor{0}.setSpeed(0);\nmotor{0}.run(RELEASE);\n",
+				"loop":""
+			}
+		]
+
+	],
+
+	"menus": {
+        "BTport":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,"A0","A1","A2","A3","A4","A5"],
+        "baud":[9600,19200,38400,51200,115200],
+		"message":["Message"],
+		"speed":[100,150,200,255],
+		"motor":[1, 2, 3, 4],
+		"direction":["FORWARD","BACKWARD"]
+
+	},
+
+	"values":{
+        "A0":14,
+        "A1":15,
+        "A2":16,
+        "A3":17,
+        "A4":18,
+        "A5":19,
+		"FORWARD":1,
+		"BACKWARD":2
+	},
+
+
+	"translators":{
+		"es_ES":{
+            "BT RX: %d.BTport TX: %d.BTport , Baud %d.baud":"bt rx: %d.BTport tx: %d.BTport , baudios %d.baud",
+            "BT Set Name %s":"bt cambiar nombre %s",
+            "BT Set Password %n":"bt cambiar constraseña %n",
+            "BT Set Baud %d.baud":"bt cambiar baudios %d.baud",
+            "BT Serial Write %s":"bt escribir %s",
+            "BT Serial Read":"bt leer palabra",
+			"Word":"palabra",
+			"BT Serial Clean":"borrar palabra",
+			"motorRun motor %d.motor direction %d.direction speed %d.speed":"mover motor %d.motor direción %d.direction velocidad %d.speed",
+			"motorStop motor %d.motor":"detener motor %d.motor",
+			"FORWARD":"ADELANTE",
+			"BACKWARD":"ATRAS"
+		}
+	}
+}
